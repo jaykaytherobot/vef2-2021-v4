@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="is">
+<%- include('header', { title }) -%>
+  <div class="wrapper">
+    <div class="earthquakes-container">
+      <h1>Jarðskjálftar 4,5+ á richter seinustu 30 daga</h1>
+      <p class="loading">Hleð gögnum...</p>
+      <ul class="earthquakes">
+      </ul>
+    </div>
+    <div class="map-container">
+      <div class="map"></div>
+    </div>
+  </div>
+  <script src="dist/bundle.js"></script>
+  </body>
+  <footer>
+    <a href="https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php">Gögn frá USGS</a>
+  </footer>
+</html>

@@ -1,7 +1,8 @@
-export async function fetchEarthquakes(type, period) {
+export async function fetchEarthquakes() {
   // TODO sækja gögn frá proxy þjónustu
+  let result;
   try {
-    result = await fetch(?);
+    result = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson');
   } catch (e) {
     console.error('Villa við að sækja', e);
     return null;
@@ -14,5 +15,5 @@ export async function fetchEarthquakes(type, period) {
 
   const data = await result.json();
 
-  return data;
+  return false;
 }
