@@ -22,6 +22,15 @@ app.set('view engine', 'ejs');
 app.set('views', join(path, '../view'));
 
 // TODO setja upp proxy þjónustu
+app.use((req, res, next) => {
+  res.header(
+    'Access-Control-Allow-Origin', '*'
+  );
+  res.header(
+    'Access-Control-Allow-Methods', 'GET'
+  );
+  next();
+});
 
 // TODO birta index.html skjal
 app.get('/', (req, res) => {
