@@ -18,6 +18,24 @@ router.get('/proxy', async (req, res) => {
   let result;
 
   // TODO skoða fyrst cachið
+  try {
+    result = await getEarthquakes(`${period}_${type}`);
+  }
+  catch (e) {
+    console.error('error getting from cache', e);
+  }
+
+  if(result) {
+    let data = {
+      'data': JSON.parse(result),
+      'info': {
+        'cached': true, 
+        'time': 0.500
+      }
+    }
+    res.json(data);
+    return;
+  }
   
   try {
     result = await fetch(URL);
@@ -35,9 +53,11 @@ router.get('/proxy', async (req, res) => {
   }
 
   // TODO setja gögn í cache
-  
+  let resultText = await result.text();
+  await setEarthquakes(`${period}_${type}`, resultText);
+
   let gogn = {
-    'data': await result.json(),
+    'data': JSON.parse(resultText),
     'info': {
       'cached': false, 
       'time': 0.500,

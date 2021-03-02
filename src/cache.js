@@ -10,10 +10,10 @@ const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
 
 export async function getEarthquakes(key) {
-  let earthquakes = await client.get(key);
+  let earthquakes = await getAsync(key);
   return earthquakes;
 }
 
 export async function setEarthquakes(key, earthquakes) {
-  await client.set(key, earthquakes);
+  await setAsync(key, earthquakes);
 }
