@@ -14,6 +14,7 @@ const {
 
 const app = express();
 const path = dirname(fileURLToPath(import.meta.url));
+console.log(path)
 
 app.use(express.static(join(path, '../public')));
 app.use(express.static(join(path, '../node_modules/leaflet/dist')));
@@ -24,8 +25,12 @@ app.set('views', join(path, '../view'));
 
 // TODO birta index.html skjal
 app.get('/', (req, res) => {
-  res.render('index', {title: 'Jarðskjálftar'});
+  res.sendFile('index.html', {
+    root: join(path, '..'),
+  });
 });
+
+app.use(proxyRouter);
 
 /**
  * Middleware sem sér um 404 villur.
