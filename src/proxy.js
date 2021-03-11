@@ -58,7 +58,7 @@ router.get('/proxy', async (req, res) => {
     period, type,
   } = req.query;
 
-  const URL = `${earthquakesUrl}${type}_${period}${earthquakesDomain}`;
+  const URL = `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/${type}_${period}.geojson`;
 
   let result;
 
