@@ -21,7 +21,14 @@ app.use(express.static(join(path, '../node_modules/leaflet/dist')));
 app.set('view engine', 'ejs');
 app.set('views', join(path, '../view'));
 
-// TODO setja upp proxy þjónustu
+// TODO birta index.html skjal
+app.get('/', (req, res) => {
+  res.sendFile('index.html', {
+    root: join(path, '..'),
+  });
+});
+
+// Enable CORS
 app.use((req, res, next) => {
   res.header(
     'Access-Control-Allow-Origin', '*'
@@ -30,13 +37,6 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Methods', 'GET'
   );
   next();
-});
-
-// TODO birta index.html skjal
-app.get('/', (req, res) => {
-  res.sendFile('index.html', {
-    root: join(path, '..'),
-  });
 });
 
 app.use(proxyRouter);

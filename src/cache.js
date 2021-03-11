@@ -1,9 +1,21 @@
 // TODO útfæra redis cache
 import redis from 'redis';
 import { promisify } from 'util';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const {
+  REDIS_URL: redis_url 
+} = process.env;
+
+if(!redis_url) {
+  console.error("Vantar redis url");
+  process.exit(1);
+}
 
 const client = redis.createClient({
-  url: 'redis://127.0.0.1:6379/0',
+  url: redis_url,
 });
 
 const getAsync = promisify(client.get).bind(client);

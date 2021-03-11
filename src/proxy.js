@@ -1,23 +1,36 @@
 // TODO útfæra proxy virkni
+import dotenv from 'dotenv';
 import express from 'express';
 import fetch from 'node-fetch';
-
+import { timerStart, timerEnd } from './time.js';
 import { getEarthquakes, setEarthquakes } from './cache.js';
 
 export const router = express.Router();
 
+dotenv.config();
+
+const {
+  EARTHQUAKES_URL: earthquakes_url,
+  EARTHQUAKES_DOMAIN: earthquakes_domain
+} = process.env;
+
+if(!earthquakes_url || !earthquakes_domain) {
+  console.error('Vantar url eða domain fyrir fetch');
+  process.exit(1);
+}
 
 router.get('/proxy', async (req, res) => {
+  const startTime = timerStart();
   const {
     period, type
   } = req.query;
   
-  console.log(`Gets request from client for ${period} and ${type}`);
-  const URL = `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/${type}_${period}.geojson`;
+  // TODO er þetta secure?
+  const URL = `${earthquakes_url}${type}_${period}${earthquakes_domain}`;
 
   let result;
 
-  // TODO skoða fyrst cachið
+  // Athuga cache
   try {
     result = await getEarthquakes(`${period}_${type}`);
   }
@@ -30,13 +43,14 @@ router.get('/proxy', async (req, res) => {
       'data': JSON.parse(result),
       'info': {
         'cached': true, 
-        'time': 0.500
+        'time': timerEnd(startTime),
       }
     }
     res.json(data);
     return;
   }
-  
+
+  // Ná í gögn frá earthquakes.usgs.gov
   try {
     result = await fetch(URL);
   }
@@ -60,7 +74,7 @@ router.get('/proxy', async (req, res) => {
     'data': JSON.parse(resultText),
     'info': {
       'cached': false, 
-      'time': 0.500,
+      'time': timerEnd(startTime),
     },
   }
   res.json(gogn);
