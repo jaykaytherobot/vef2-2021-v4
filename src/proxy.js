@@ -19,17 +19,50 @@ if(!earthquakes_url || !earthquakes_domain) {
   process.exit(1);
 }
 
+const periods = ['hour', 'day', 'week', 'month'];
+const types = ['significant', '4.5', '2.5', '1.0', 'all'];
+
+function sanitizePeriod(period){
+  if (periods.includes(period)) {
+    return period;
+  }
+  return false;
+}
+
+function santizeType(type) {
+  if (types.includes(type)) {
+    return type;
+  }
+  return false;
+}
+
+router.get('/proxy', (req, res, next) => {
+  let {
+    period, type
+  } = req.query;
+
+  period = sanitizePeriod(period);
+  type = santizeType(type);
+
+  if (!period || !type) {
+    res.status(400).json({ error: 'bad query parameters'} );
+    return;
+  }
+  req.query.period = period;
+  req.query.type = type;
+  next();
+})
+
 router.get('/proxy', async (req, res) => {
-  const startTime = timerStart();
   const {
     period, type
   } = req.query;
-  
-  // TODO er þetta secure?
+
   const URL = `${earthquakes_url}${type}_${period}${earthquakes_domain}`;
-
+  
   let result;
-
+  
+  const startTime = timerStart();
   // Athuga cache
   try {
     result = await getEarthquakes(`${period}_${type}`);
