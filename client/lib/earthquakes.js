@@ -2,7 +2,7 @@ export async function fetchEarthquakes(period, type) {
   // TODO sækja gögn frá proxy þjónustu
   let result;
   try {
-    result = await fetch(`http://vef2-2021-v4-jks21.herokuapp.com/proxy?period=${period}&type=${type}`);
+    result = await fetch(`https://vef2-2021-v4-jks21.herokuapp.com/proxy?period=${period}&type=${type}`);
   } catch (e) {
     console.error('Villa við að sækja', e);
     return null;
