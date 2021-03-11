@@ -10,11 +10,11 @@ export const router = express.Router();
 dotenv.config();
 
 const {
-  EARTHQUAKES_URL: earthquakes_url,
-  EARTHQUAKES_DOMAIN: earthquakes_domain
+  EARTHQUAKES_URL: earthquakesUrl,
+  EARTHQUAKES_DOMAIN: earthquakesDomain,
 } = process.env;
 
-if(!earthquakes_url || !earthquakes_domain) {
+if (!earthquakesUrl || !earthquakesDomain) {
   console.error('Vantar url eða domain fyrir fetch');
   process.exit(1);
 }
@@ -22,7 +22,7 @@ if(!earthquakes_url || !earthquakes_domain) {
 const periods = ['hour', 'day', 'week', 'month'];
 const types = ['significant', '4.5', '2.5', '1.0', 'all'];
 
-function sanitizePeriod(period){
+function sanitizePeriod(period) {
   if (periods.includes(period)) {
     return period;
   }
@@ -38,47 +38,46 @@ function santizeType(type) {
 
 router.get('/proxy', (req, res, next) => {
   let {
-    period, type
+    period, type,
   } = req.query;
 
   period = sanitizePeriod(period);
   type = santizeType(type);
 
   if (!period || !type) {
-    res.status(400).json({ error: 'bad query parameters'} );
+    res.status(400).json({ error: 'bad query parameters' });
     return;
   }
   req.query.period = period;
   req.query.type = type;
   next();
-})
+});
 
 router.get('/proxy', async (req, res) => {
   const {
-    period, type
+    period, type,
   } = req.query;
 
-  const URL = `${earthquakes_url}${type}_${period}${earthquakes_domain}`;
-  
+  const URL = `${earthquakesUrl}${type}_${period}${earthquakesDomain}`;
+
   let result;
-  
+
   const startTime = timerStart();
   // Athuga cache
   try {
     result = await getEarthquakes(`${period}_${type}`);
-  }
-  catch (e) {
+  } catch (e) {
     console.error('error getting from cache', e);
   }
 
-  if(result) {
-    let data = {
-      'data': JSON.parse(result),
-      'info': {
-        'cached': true, 
-        'time': timerEnd(startTime),
-      }
-    }
+  if (result) {
+    const data = {
+      data: JSON.parse(result),
+      info: {
+        cached: true,
+        time: timerEnd(startTime),
+      },
+    };
     res.json(data);
     return;
   }
@@ -86,8 +85,7 @@ router.get('/proxy', async (req, res) => {
   // Ná í gögn frá earthquakes.usgs.gov
   try {
     result = await fetch(URL);
-  }
-  catch (e) {
+  } catch (e) {
     console.error('Villa við að sækja gögn frá vefþjónustu', e);
     res.status(500).send('Villa við að sækja gögn frá vefþónustu');
     return;
@@ -100,15 +98,15 @@ router.get('/proxy', async (req, res) => {
   }
 
   // TODO setja gögn í cache
-  let resultText = await result.text();
+  const resultText = await result.text();
   await setEarthquakes(`${period}_${type}`, resultText);
 
-  let gogn = {
-    'data': JSON.parse(resultText),
-    'info': {
-      'cached': false, 
-      'time': timerEnd(startTime),
+  const gogn = {
+    data: JSON.parse(resultText),
+    info: {
+      cached: false,
+      time: timerEnd(startTime),
     },
-  }
+  };
   res.json(gogn);
 });

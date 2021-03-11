@@ -14,7 +14,6 @@ const {
 
 const app = express();
 const path = dirname(fileURLToPath(import.meta.url));
-console.log(path)
 
 app.use(express.static(join(path, '../public')));
 app.use(express.static(join(path, '../node_modules/leaflet/dist')));
@@ -31,10 +30,10 @@ app.get('/', (req, res) => {
 // Enable CORS
 app.use((req, res, next) => {
   res.header(
-    'Access-Control-Allow-Origin', '*'
+    'Access-Control-Allow-Origin', '*',
   );
   res.header(
-    'Access-Control-Allow-Methods', 'GET'
+    'Access-Control-Allow-Methods', 'GET',
   );
   next();
 });

@@ -21,7 +21,7 @@ function addLoadingErrorToDOM() {
   const parent = loading.parentNode;
 
   parent.appendChild(
-    element('p', { 'class': 'error' }, null, 'Villa við að sækja gögn'),
+    element('p', { class: 'error' }, null, 'Villa við að sækja gögn'),
   );
 }
 
@@ -45,12 +45,12 @@ function clearDOM() {
   }
 }
 
-function addEarthquakesToDOM(earthquakes, title) {
+function addEarthquakesToDOM(earthquakes, pageTitle) {
   const h1 = document.querySelector('h1');
   const cache = document.querySelector('.cache');
 
-  h1.append(title);
-  cache.append(`Gögn eru ${earthquakes.info.cached ? '' : 'ekki'} í cache. Fyrirspurn tók ${earthquakes.info.time} sek.`)
+  h1.append(pageTitle);
+  cache.append(`Gögn eru ${earthquakes.info.cached ? '' : 'ekki'} í cache. Fyrirspurn tók ${earthquakes.info.time} sek.`);
 
   const ul = document.querySelector('.earthquakes');
 
@@ -146,5 +146,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     addLoadingErrorToDOM();
     return;
   }
-  addEarthquakesToDOM(earthquakes, "Allir jarðskjálftar, seinustu klukkustund");
+  addEarthquakesToDOM(earthquakes, 'Allir jarðskjálftar, seinustu klukkustund');
 });

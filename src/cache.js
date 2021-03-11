@@ -5,37 +5,35 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export let getEarthquakes;
-export let setEarthquakes;
-
+export let getEarthquakes; // eslint-disable-line import/no-mutable-exports
+export let setEarthquakes; // eslint-disable-line import/no-mutable-exports
 
 const {
-  REDIS_URL: redis_url 
+  REDIS_URL: redisUrl,
 } = process.env;
 
 try {
-  if (!redis_url) {
+  if (!redisUrl) {
     throw Error('No redis url');
   }
 
   const client = redis.createClient({
-    url: redis_url,
+    url: redisUrl,
   });
 
   const getAsync = promisify(client.get).bind(client);
   const setAsync = promisify(client.set).bind(client);
 
   getEarthquakes = async (key) => {
-    let earthquakes = await getAsync(key);
+    const earthquakes = await getAsync(key);
     return earthquakes;
-  }
+  };
 
   setEarthquakes = async (key, earthquakes) => {
     await setAsync(key, earthquakes);
-  }
-}
-catch (e) {
+  };
+} catch (e) {
   console.error('Error setting up redis client, running without cache', e);
-  getEarthquakes = async (key) => { return false};
-  setEarthquakes = async (key, value) => { return }
+  getEarthquakes = async (key) => false; // eslint-disable-line no-unused-vars
+  setEarthquakes = async (key, value) => { }; // eslint-disable-line no-unused-vars
 }
