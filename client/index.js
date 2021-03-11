@@ -1,6 +1,6 @@
 import { fetchEarthquakes } from './lib/earthquakes';
 import { el, element, formatDate } from './lib/utils';
-import { init, createPopup } from './lib/map';
+import { init, createPopup, clearMarkers } from './lib/map';
 
 let map;
 
@@ -26,6 +26,7 @@ function addLoadingErrorToDOM() {
 }
 
 function clearDOM() {
+  clearMarkers();
   const h1 = document.querySelector('h1');
   while (h1.firstChild) {
     h1.removeChild(h1.firstChild);
