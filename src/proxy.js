@@ -1,23 +1,10 @@
 // TODO útfæra proxy virkni
-import dotenv from 'dotenv';
 import express from 'express';
 import fetch from 'node-fetch';
 import { timerStart, timerEnd } from './time.js';
 import { getEarthquakes, setEarthquakes } from './cache.js';
 
 export const router = express.Router();
-
-dotenv.config();
-
-const {
-  EARTHQUAKES_URL: earthquakesUrl,
-  EARTHQUAKES_DOMAIN: earthquakesDomain,
-} = process.env;
-
-if (!earthquakesUrl || !earthquakesDomain) {
-  console.error('Vantar url eða domain fyrir fetch');
-  process.exit(1);
-}
 
 const periods = ['hour', 'day', 'week', 'month'];
 const types = ['significant', '4.5', '2.5', '1.0', 'all'];
