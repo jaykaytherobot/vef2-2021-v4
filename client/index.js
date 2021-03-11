@@ -95,11 +95,9 @@ function addEarthquakesToDOM(earthquakes, title) {
 async function overrideLinks() {
   const nav = document.querySelector('.nav');
   const lists = nav.querySelectorAll('.list');
-  console.log(lists);
 
   lists.forEach((list) => {
     const h2 = list.querySelector('h2');
-    console.log(h2);
     const links = list.querySelectorAll('a');
 
     links.forEach((link) => {
